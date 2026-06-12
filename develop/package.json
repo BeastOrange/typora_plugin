@@ -4,6 +4,8 @@
     "build:single": "node build/index.cjs katex",
     "build:download": "node build/index.cjs js-yaml markdown-it abc chart echarts wavedrom dataTables",
     "build:analyze": "node build/index.cjs --analyze markmap",
+    "build:macos": "node build/bundle-macos.cjs",
+    "build:daemon": "bash ../daemon/build-daemon.sh",
     "test": "node --require ../plugin/global/core/polyfill.js --test",
     "dev": "node --env-file=.env scripts/index.js",
     "rpc": "npm run dev rpc",

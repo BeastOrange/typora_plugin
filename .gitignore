@@ -5,3 +5,8 @@
 /develop/node_modules
 /plugin/bin/version.json
 /plugin/global/user_styles/*.css
+
+# macOS port build artifacts
+/daemon/build
+/plugin/bundle.js
+/plugin/bundle.js.map
