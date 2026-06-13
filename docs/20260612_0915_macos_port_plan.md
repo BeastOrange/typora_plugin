@@ -86,6 +86,12 @@ TypeMark/index.html
 ### 阶段二：核心重构 - MacBridge（第 2-3 天）
 **范围**：用桥接调用替换所有 Node.js API 用法
 
+> ⚠️ **架构已调整（2026-06-13）**：本节描述的「逐文件改写为 MacBridge 调用」方案已**放弃**。
+> 在「长期同步上游」前提下，逐个改写调用点会产生数十个 cherry-pick 冲突点。
+> 实际采用 **Shim 层 + esbuild alias + 静态插件注册表**：上游调用点一行不改。
+> 详见 [阶段二实现记录：Shim 层 + esbuild Alias 架构](20260613_0939_phase2_shim_architecture.md)。
+> 以下内容保留作历史参考。
+
 **需要修改的文件**：
 1. `plugin/index.js` → `plugin/index.ts`
    - 移除 `global.reqnode/dirname` 依赖

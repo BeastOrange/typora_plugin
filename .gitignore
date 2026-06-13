@@ -10,3 +10,5 @@
 /daemon/build
 /plugin/bundle.js
 /plugin/bundle.js.map
+/plugin/bundle.meta.json
+/plugin/macos-registry.generated.js
