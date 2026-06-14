@@ -31,11 +31,13 @@ if [ -f "$REPO_ROOT/plugin/bundle.js" ]; then
 else
   c_yellow "⚠ 未找到 plugin/bundle.js（阶段二完成后才会有），暂跳过"
 fi
-# 复制运行时需要的资源（locales、styles 等）
-for d in global/locales global/styles global/settings; do
+# 复制运行时需要的资源。核心路径以 pluginRoot + "./plugin/..." 解析，
+# 因此安装目录内必须保留 plugin/ 这一层。
+mkdir -p "$PLUGIN_INSTALL_DIR/plugin"
+for d in global/locales global/styles global/settings global/user_styles preferences; do
   if [ -d "$REPO_ROOT/plugin/$d" ]; then
-    mkdir -p "$PLUGIN_INSTALL_DIR/$d"
-    cp -R "$REPO_ROOT/plugin/$d/." "$PLUGIN_INSTALL_DIR/$d/"
+    mkdir -p "$PLUGIN_INSTALL_DIR/plugin/$d"
+    cp -R "$REPO_ROOT/plugin/$d/." "$PLUGIN_INSTALL_DIR/plugin/$d/"
   fi
 done
 c_green "✓ 已复制插件资源到 $PLUGIN_INSTALL_DIR"
@@ -53,6 +55,8 @@ if [ -f "$REPO_ROOT/daemon/build/typora-plugin-daemon" ]; then
   sudo chmod +x "$DAEMON_BIN_DEST"
   sudo cp "$SCRIPT_DIR/reinstall-macos.sh" "$REINSTALL_SCRIPT_DEST"
   sudo chmod +x "$REINSTALL_SCRIPT_DEST"
+  sudo cp "$SCRIPT_DIR/lib-macos.sh" "$LIB_SCRIPT_DEST"
+  sudo chmod +x "$LIB_SCRIPT_DEST"
   mkdir -p "$HOME/Library/LaunchAgents"
   cp "$REPO_ROOT/daemon/com.typora.plugin.watcher.plist" "$LAUNCH_AGENT_DEST"
   launchctl unload "$LAUNCH_AGENT_DEST" 2>/dev/null || true

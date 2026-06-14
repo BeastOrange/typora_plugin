@@ -656,9 +656,14 @@ const foldLanguage = async ({ utils }) => {
   const requireModules = async () => {
     const foldPath = "./plugin/fence_enhance/resource/fold/"
     utils.insertStyleFile("fence-enhance-fold", foldPath + "foldgutter.css")
-    const modules = (await utils.Package.FsExtra.readdir(utils.joinPluginPath(foldPath))).filter(f => f.endsWith("-fold.js"))
-    const vendors = ["foldcode.js", "foldgutter.js", ...modules]
-    vendors.map(f => utils.joinPluginPath(foldPath, f)).forEach(require)
+    const modules = ["brace-fold.js", "comment-fold.js", "indent-fold.js", "markdown-fold.js", "xml-fold.js"]
+    require("./resource/fold/foldcode.js")
+    require("./resource/fold/foldgutter.js")
+    require("./resource/fold/brace-fold.js")
+    require("./resource/fold/comment-fold.js")
+    require("./resource/fold/indent-fold.js")
+    require("./resource/fold/markdown-fold.js")
+    require("./resource/fold/xml-fold.js")
     console.debug(`[ CodeMirror folding module ] [ ${modules.length} ]:`, modules)
   }
 

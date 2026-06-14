@@ -153,6 +153,16 @@
   visibility: visible;
 }
 
+:host-context(body.typora-plugin-macos-suppress-hints) .title-buttons .button::after,
+:host-context(html.typora-plugin-macos-suppress-hints) .title-buttons .button::after,
+:host-context(body.typora-plugin-macos-suppress-hints) .title-buttons .button:hover::after,
+:host-context(html.typora-plugin-macos-suppress-hints) .title-buttons .button:hover::after {
+  content: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  display: none !important;
+}
+
 .title-buttons .button[data-action="close"]:hover {
   background-color: var(--window-close-hover-bg);
   color: var(--window-close-hover-text);

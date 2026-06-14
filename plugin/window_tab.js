@@ -340,9 +340,11 @@ class WindowTabPlugin extends BasePlugin {
   })
 
   prepare = () => {
-    if (window._options.framelessWindow && this.config.HIDE_WINDOW_TITLE_BAR) {
-      document.querySelector("header").style.zIndex = "897"
-      document.getElementById("top-titlebar").style.display = "none"
+    const header = document.querySelector("header")
+    const titlebar = document.getElementById("top-titlebar")
+    if (window._options.framelessWindow && this.config.HIDE_WINDOW_TITLE_BAR && header && titlebar) {
+      header.style.zIndex = "897"
+      titlebar.style.display = "none"
     }
     if (this.config.LAST_TAB_CLOSE_ACTION === "blankPage" && this.utils.isBetaVersion) {
       this.config.LAST_TAB_CLOSE_ACTION = "reconfirm"
@@ -382,11 +384,15 @@ class WindowTabPlugin extends BasePlugin {
       this.utils.eventHub.addEventListener(this.utils.eventHub.eventType.fileContentLoaded, this._scrollContent)
       this.utils.eventHub.addEventListener(this.utils.eventHub.eventType.toggleSettingPage, hide => this.entities.windowTab.style.visibility = hide ? "hidden" : "initial")
 
-      const isHeaderReady = () => this.utils.isBetaVersion ? this.entities.header.getBoundingClientRect().height : true
+      const isHeaderReady = () => this.utils.isBetaVersion && this.entities.header
+        ? this.entities.header.getBoundingClientRect().height
+        : true
       const adjustTop = () => setTimeout(() => {
-        if (!this.config.HIDE_WINDOW_TITLE_BAR) {
+        if (!this.config.HIDE_WINDOW_TITLE_BAR && this.entities.header) {
           const { height, top } = this.entities.header.getBoundingClientRect()
           this.entities.windowTab.style.top = `${height + top}px`
+        } else {
+          this.entities.windowTab.style.top = "0px"
         }
         // Adjust the top position of the content Tag to prevent it from being obscured by the tab.
         this._adjustContentTop()
@@ -775,8 +781,13 @@ class WindowTabPlugin extends BasePlugin {
     if (height + top === 0) {  // Equal to 0, indicating that there are no tabs.
       this._resetContentTop()
     } else {
-      const { height: headerHeight, top: headerTop } = document.querySelector("header").getBoundingClientRect()
-      const t = Math.max(top + height, headerHeight + headerTop) + "px"
+      const headerBottom = this.entities.header
+        ? (() => {
+          const { height: headerHeight, top: headerTop } = this.entities.header.getBoundingClientRect()
+          return headerHeight + headerTop
+        })()
+        : 0
+      const t = Math.max(top + height, headerBottom) + "px"
       this.entities.content.style.top = t
       this.entities.source.style.top = t
     }

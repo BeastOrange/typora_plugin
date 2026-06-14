@@ -17,7 +17,7 @@ if [ -f "$BACKUP" ]; then
   c_green "✓ 已还原原始 index.html"
 else
   c_yellow "⚠ 未找到备份，尝试直接移除注入标记"
-  perl -i -ne "print unless /$INJECT_MARKER/" "$INDEX_HTML" 2>/dev/null || true
+  remove_injection
 fi
 
 # 2. 停止并移除 daemon
@@ -26,7 +26,7 @@ if [ -f "$LAUNCH_AGENT_DEST" ]; then
   rm -f "$LAUNCH_AGENT_DEST"
   c_green "✓ 已停止并移除 daemon"
 fi
-sudo rm -f "$DAEMON_BIN_DEST" "$REINSTALL_SCRIPT_DEST" 2>/dev/null || true
+sudo rm -f "$DAEMON_BIN_DEST" "$REINSTALL_SCRIPT_DEST" "$LIB_SCRIPT_DEST" 2>/dev/null || true
 
 # 3. 重新签名（ad-hoc，恢复可启动状态）
 codesign --force --deep --sign - "$TYPORA_APP" 2>/dev/null || true

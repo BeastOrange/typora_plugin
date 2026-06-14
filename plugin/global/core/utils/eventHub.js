@@ -128,10 +128,11 @@ class EventHub {
     // })
     // resizeObserver.observe(content)
 
-    this.utils.decorator.beforeCall(() => File?.megaMenu, "showPreferencePanel", () => this.publishEvent(this.eventType.toggleSettingPage, true))
-    this.utils.decorator.beforeCall(() => File?.megaMenu, "closePreferencePanel", () => this.publishEvent(this.eventType.toggleSettingPage, false))
-    this.utils.decorator.beforeCall(() => File?.megaMenu, "show", () => this.publishEvent(this.eventType.toggleSettingPage, true))
-    this.utils.decorator.beforeCall(() => File?.megaMenu, "hide", () => this.publishEvent(this.eventType.toggleSettingPage, false))
+    const beforeOptionalCall = (...args) => this.utils.decorator.beforeCall(...args).catch(this.utils.noop)
+    beforeOptionalCall(() => File?.megaMenu, "showPreferencePanel", () => this.publishEvent(this.eventType.toggleSettingPage, true))
+    beforeOptionalCall(() => File?.megaMenu, "closePreferencePanel", () => this.publishEvent(this.eventType.toggleSettingPage, false))
+    beforeOptionalCall(() => File?.megaMenu, "show", () => this.publishEvent(this.eventType.toggleSettingPage, true))
+    beforeOptionalCall(() => File?.megaMenu, "hide", () => this.publishEvent(this.eventType.toggleSettingPage, false))
 
     const debouncePublish = this.utils.debounce(() => this.publishEvent(this.eventType.fileEdited), 400)
     this.observer = new MutationObserver(mutations => {

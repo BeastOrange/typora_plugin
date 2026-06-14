@@ -12,3 +12,4 @@
 /plugin/bundle.js.map
 /plugin/bundle.meta.json
 /plugin/macos-registry.generated.js
+/plugin/macos-resource-manifest.generated.js

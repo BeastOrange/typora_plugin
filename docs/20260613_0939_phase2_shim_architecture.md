@@ -100,6 +100,31 @@ $ npm run build:macos
 
 `shims/fs.js` 当前的 handler 名与返回格式是**最合理推断**，需在测试版 Typora（**非主力 app**）的 devtools console 实测后回填：
 
+### 6.1 需要跑什么
+
+需要先构建 `plugin/bundle.js`，再把它注入并启动**测试版 Typora**。也就是说：不是二选一；bundle 是被测试版 Typora 加载的插件脚本。
+
+本地准备顺序：
+
+```bash
+cd develop
+npm run build:macos
+
+# 指向测试版 Typora，避免触碰主力 /Applications/Typora.app
+TYPORA_APP="/Applications/Typora-Test.app" bash ../scripts/macos/install-macos.sh
+open "/Applications/Typora-Test.app"
+```
+
+安装脚本会在 `index.html` 中先注入：
+
+```js
+window._TYPORA_PLUGIN_CONFIG = { pluginRoot, homeDir, tempDir }
+```
+
+再注入 `bundle.js`。这个配置必须先于 bundle 存在，否则 `plugin/macos-entry.js` 无法设置 `global.dirname`，核心路径解析会失败。
+
+### 6.2 待测 handler
+
 ```js
 // 读文件返回格式？string 还是 {content}？编码？
 await JSBridge.invoke("document.getDataFromFile", "/abs/path.toml")
